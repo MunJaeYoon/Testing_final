@@ -1,0 +1,85 @@
+syntax = "proto3";
+
+package community;
+
+option go_package = "github.com/pawfiler/backend/services/community/pb";
+
+service CommunityService {
+  rpc CreatePost(CreatePostRequest) returns (Post);
+  rpc GetFeed(GetFeedRequest) returns (FeedResponse);
+  rpc GetPost(GetPostRequest) returns (Post);
+  rpc LikePost(LikePostRequest) returns (LikePostResponse);
+  rpc AddComment(AddCommentRequest) returns (Comment);
+  rpc GetComments(GetCommentsRequest) returns (CommentsResponse);
+}
+
+message CreatePostRequest {
+  string user_id = 1;
+  string author_nickname = 2;
+  string author_emoji = 3;
+  string title = 4;
+  string body = 5;
+  repeated string tags = 6;
+}
+
+message Post {
+  string id = 1;
+  string author_nickname = 2;
+  string author_emoji = 3;
+  string title = 4;
+  string body = 5;
+  int32 likes = 6;
+  int32 comments = 7;
+  string created_at = 8;
+  repeated string tags = 9;
+}
+
+message GetFeedRequest {
+  int32 page = 1;
+  int32 page_size = 2;
+}
+
+message FeedResponse {
+  repeated Post posts = 1;
+  int32 total_count = 2;
+  int32 page = 3;
+}
+
+message GetPostRequest {
+  string post_id = 1;
+}
+
+message LikePostRequest {
+  string post_id = 1;
+  string user_id = 2;
+}
+
+message LikePostResponse {
+  bool success = 1;
+  int32 new_like_count = 2;
+}
+
+message AddCommentRequest {
+  string post_id = 1;
+  string user_id = 2;
+  string author_nickname = 3;
+  string author_emoji = 4;
+  string content = 5;
+}
+
+message Comment {
+  string id = 1;
+  string post_id = 2;
+  string author_nickname = 3;
+  string author_emoji = 4;
+  string content = 5;
+  string created_at = 6;
+}
+
+message GetCommentsRequest {
+  string post_id = 1;
+}
+
+message CommentsResponse {
+  repeated Comment comments = 1;
+}
