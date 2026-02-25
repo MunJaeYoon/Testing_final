@@ -1,0 +1,57 @@
+syntax = "proto3";
+
+package quiz;
+
+option go_package = "github.com/pawfiler/backend/services/quiz/pb";
+
+service QuizService {
+  rpc GetRandomQuestion(GetRandomQuestionRequest) returns (QuizQuestion);
+  rpc SubmitAnswer(SubmitAnswerRequest) returns (SubmitAnswerResponse);
+  rpc GetUserStats(GetUserStatsRequest) returns (QuizStats);
+  rpc GetQuestionById(GetQuestionByIdRequest) returns (QuizQuestion);
+}
+
+message GetRandomQuestionRequest {
+  string user_id = 1;
+  optional string difficulty = 2;
+}
+
+message GetQuestionByIdRequest {
+  string question_id = 1;
+}
+
+message QuizQuestion {
+  string id = 1;
+  string video_url = 2;
+  string thumbnail_emoji = 3;
+  repeated string options = 4;
+  int32 correct_index = 5;
+  string explanation = 6;
+  string difficulty = 7;
+}
+
+message SubmitAnswerRequest {
+  string user_id = 1;
+  string question_id = 2;
+  int32 selected_index = 3;
+}
+
+message SubmitAnswerResponse {
+  bool correct = 1;
+  int32 xp_earned = 2;
+  int32 coins_earned = 3;
+  string explanation = 4;
+  int32 streak_count = 5;
+}
+
+message GetUserStatsRequest {
+  string user_id = 1;
+}
+
+message QuizStats {
+  int32 total_answered = 1;
+  double correct_rate = 2;
+  int32 current_streak = 3;
+  int32 best_streak = 4;
+  int32 lives = 5;
+}

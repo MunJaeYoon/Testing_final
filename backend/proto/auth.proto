@@ -1,0 +1,67 @@
+syntax = "proto3";
+
+package auth;
+
+option go_package = "github.com/pawfiler/backend/services/auth/pb";
+
+service AuthService {
+  rpc Login(LoginRequest) returns (LoginResponse);
+  rpc Signup(SignupRequest) returns (SignupResponse);
+  rpc ValidateToken(ValidateTokenRequest) returns (ValidateTokenResponse);
+  rpc GetProfile(GetProfileRequest) returns (UserProfile);
+  rpc UpdateProfile(UpdateProfileRequest) returns (UserProfile);
+}
+
+message LoginRequest {
+  string email = 1;
+  string password = 2;
+}
+
+message LoginResponse {
+  string token = 1;
+  UserProfile user = 2;
+}
+
+message SignupRequest {
+  string email = 1;
+  string password = 2;
+  string nickname = 3;
+  string avatar_emoji = 4;
+}
+
+message SignupResponse {
+  string token = 1;
+  UserProfile user = 2;
+}
+
+message ValidateTokenRequest {
+  string token = 1;
+}
+
+message ValidateTokenResponse {
+  bool valid = 1;
+  string user_id = 2;
+}
+
+message GetProfileRequest {
+  string user_id = 1;
+}
+
+message UpdateProfileRequest {
+  string user_id = 1;
+  optional string nickname = 2;
+  optional string avatar_emoji = 3;
+}
+
+message UserProfile {
+  string id = 1;
+  string email = 2;
+  string nickname = 3;
+  string avatar_emoji = 4;
+  string subscription_type = 5;
+  int32 coins = 6;
+  int32 level = 7;
+  string level_title = 8;
+  int32 xp = 9;
+  string created_at = 10;
+}
