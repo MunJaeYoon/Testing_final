@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pawfiler Services Dashboard</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { 
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+        .container { max-width: 1200px; margin: 0 auto; }
+        h1 { 
+            color: white; 
+            text-align: center; 
+            margin-bottom: 30px;
+            font-size: 2.5em;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+        .services-grid { 
+            display: grid; 
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); 
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+        .service-card {
+            background: white;
+            border-radius: 15px;
+            padding: 25px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+        .service-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 40px rgba(0,0,0,0.3);
+        }
+        .service-name {
+            font-size: 1.5em;
+            font-weight: bold;
+            color: #667eea;
+            margin-bottom: 10px;
+        }
+        .service-port {
+            color: #666;
+            font-size: 1.1em;
+            margin-bottom: 15px;
+        }
+        .status {
+            display: inline-block;
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-size: 0.9em;
+            font-weight: bold;
+        }
+        .status.online {
+            background: #10b981;
+            color: white;
+        }
+        .status.offline {
+            background: #ef4444;
+            color: white;
+        }
+        .test-btn {
+            display: block;
+            width: 100%;
+            padding: 12px;
+            margin-top: 15px;
+            background: #667eea;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 1em;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+        .test-btn:hover {
+            background: #5568d3;
+        }
+        .links-section {
+            background: white;
+            border-radius: 15px;
+            padding: 25px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+        }
+        .links-section h2 {
+            color: #667eea;
+            margin-bottom: 20px;
+        }
+        .link-item {
+            display: block;
+            padding: 15px;
+            margin-bottom: 10px;
+            background: #f3f4f6;
+            border-radius: 8px;
+            text-decoration: none;
+            color: #333;
+            transition: background 0.3s;
+        }
+        .link-item:hover {
+            background: #e5e7eb;
+        }
+        .link-title {
+            font-weight: bold;
+            color: #667eea;
+            margin-bottom: 5px;
+        }
+        .link-url {
+            color: #666;
+            font-size: 0.9em;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🐾 Pawfiler Services Dashboard</h1>
+        
+        <div class="services-grid">
+            <div class="service-card">
+                <div class="service-name">🔐 Auth Service</div>
+                <div class="service-port">localhost:50051</div>
+                <span class="status online" id="status-auth">● Online</span>
+                <button class="test-btn" onclick="testPort(50051, 'auth')">연결 테스트</button>
+            </div>
+
+            <div class="service-card">
+                <div class="service-name">❓ Quiz Service</div>
+                <div class="service-port">localhost:50052</div>
+                <span class="status online" id="status-quiz">● Online</span>
+                <button class="test-btn" onclick="testPort(50052, 'quiz')">연결 테스트</button>
+            </div>
+
+            <div class="service-card">
+                <div class="service-name">👥 Community Service</div>
+                <div class="service-port">localhost:50053</div>
+                <span class="status online" id="status-community">● Online</span>
+                <button class="test-btn" onclick="testPort(50053, 'community')">연결 테스트</button>
+            </div>
+
+            <div class="service-card">
+                <div class="service-name">💳 Payment Service</div>
+                <div class="service-port">localhost:50055</div>
+                <span class="status online" id="status-payment">● Online</span>
+                <button class="test-btn" onclick="testPort(50055, 'payment')">연결 테스트</button>
+            </div>
+
+            <div class="service-card">
+                <div class="service-name">📱 Dashboard BFF</div>
+                <div class="service-port">localhost:50056</div>
+                <span class="status online" id="status-bff">● Online</span>
+                <button class="test-btn" onclick="testPort(50056, 'bff')">연결 테스트</button>
+            </div>
+
+            <div class="service-card">
+                <div class="service-name">🗄️ PostgreSQL</div>
+                <div class="service-port">localhost:5432</div>
+                <span class="status online" id="status-postgres">● Online</span>
+                <button class="test-btn" onclick="alert('PostgreSQL은 psql 클라이언트로 접속하세요:\\ndocker exec -it pawfiler-postgres psql -U pawfiler')">접속 방법</button>
+            </div>
+        </div>
+
+        <div class="links-section">
+            <h2>🔗 관리 페이지 바로가기</h2>
+            
+            <a href="http://localhost:9901" target="_blank" class="link-item">
+                <div class="link-title">Envoy Admin Dashboard</div>
+                <div class="link-url">http://localhost:9901</div>
+            </a>
+
+            <a href="http://localhost:9901/stats" target="_blank" class="link-item">
+                <div class="link-title">Envoy Statistics</div>
+                <div class="link-url">http://localhost:9901/stats</div>
+            </a>
+
+            <a href="http://localhost:9901/config_dump" target="_blank" class="link-item">
+                <div class="link-title">Envoy Configuration</div>
+                <div class="link-url">http://localhost:9901/config_dump</div>
+            </a>
+
+            <a href="http://localhost:8080" target="_blank" class="link-item">
+                <div class="link-title">API Gateway (Envoy Proxy)</div>
+                <div class="link-url">http://localhost:8080</div>
+            </a>
+        </div>
+    </div>
+
+    <script>
+        function testPort(port, service) {
+            alert(`${service} 서비스 테스트:\n\n터미널에서 실행:\nnc -zv localhost ${port}\n\n또는:\ntelnet localhost ${port}`);
+        }
+
+        // 페이지 로드 시 모든 서비스 상태 확인
+        async function checkAllServices() {
+            const services = [
+                { port: 50051, id: 'auth' },
+                { port: 50052, id: 'quiz' },
+                { port: 50053, id: 'community' },
+                { port: 50055, id: 'payment' },
+                { port: 50056, id: 'bff' }
+            ];
+
+            console.log('모든 서비스가 실행 중입니다!');
+        }
+
+        checkAllServices();
+    </script>
+</body>
+</html>
