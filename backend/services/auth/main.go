@@ -62,6 +62,11 @@ func loginHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	if req.Email != "detective@deepfind.io" || req.Password != "password123" {
+		http.Error(w, "Invalid email or password", http.StatusUnauthorized)
+		return
+	}
+
 	user := UserProfile{
 		ID:               "usr_001",
 		Email:            req.Email,
@@ -89,6 +94,16 @@ func signupHandler(w http.ResponseWriter, r *http.Request) {
 	var req SignupRequest
 	if err := json.NewDecoder(r.Body).Decode(&req); err != nil {
 		http.Error(w, err.Error(), http.StatusBadRequest)
+		return
+	}
+
+	if req.Email == "" || req.Password == "" || req.Nickname == "" {
+		http.Error(w, "Email, password, and nickname are required", http.StatusBadRequest)
+		return
+	}
+
+	if len(req.Password) < 6 {
+		http.Error(w, "Password must be at least 6 characters", http.StatusBadRequest)
 		return
 	}
 

@@ -19,13 +19,15 @@ const request = async <T>(
   options: RequestInit = {}
 ): Promise<T> => {
   const token = localStorage.getItem("token");
+  const isGrpc = endpoint.includes("Service/");
   const headers: HeadersInit = {
-    "Content-Type": "application/json",
+    "Content-Type": isGrpc ? "application/grpc-web+json" : "application/json",
     ...(token && { Authorization: `Bearer ${token}` }),
     ...options.headers,
   };
 
-  const res = await fetch(`${API_BASE}${endpoint}`, {
+  const url = endpoint.startsWith("http") ? endpoint : `${API_BASE}${endpoint}`;
+  const res = await fetch(url, {
     ...options,
     headers,
   });
@@ -51,7 +53,7 @@ export const signup = (req: SignupRequest) =>
   });
 
 export const fetchQuizQuestion = () =>
-  request<QuizQuestion>("/quiz/quiz.QuizService/GetQuestion", { method: "POST", body: "{}" });
+  request<QuizQuestion>("http://localhost:50052/quiz.QuizService/GetQuestion", { method: "POST", body: JSON.stringify({}) });
 
 export const submitQuizAnswer = (req: QuizSubmitRequest) =>
   request<QuizSubmitResponse>("/quiz/quiz.QuizService/SubmitAnswer", {
@@ -60,7 +62,7 @@ export const submitQuizAnswer = (req: QuizSubmitRequest) =>
   });
 
 export const fetchCommunityFeed = () =>
-  request<CommunityFeed>("/community/community.CommunityService/GetFeed", {
+  request<CommunityFeed>("http://localhost:50053/community.CommunityService/GetFeed", {
     method: "POST",
     body: JSON.stringify({ page: 1, limit: 20 }),
   });
@@ -76,9 +78,9 @@ export const runVideoAnalysis = (videoFile: File) => {
 };
 
 export const getSubscriptionPlans = () =>
-  request<{ plans: SubscriptionPlan[] }>("/payment/payment.PaymentService/GetPlans", {
+  request<{ plans: SubscriptionPlan[] }>("http://localhost:50055/payment.PaymentService/GetPlans", {
     method: "POST",
-    body: "{}",
+    body: JSON.stringify({}),
   });
 
 export const checkout = (req: CheckoutRequest) =>
