@@ -1,0 +1,60 @@
+syntax = "proto3";
+
+package payment;
+
+option go_package = "github.com/pawfiler/backend/services/payment/pb";
+
+service PaymentService {
+  rpc CreateCheckout(CheckoutRequest) returns (CheckoutResponse);
+  rpc GetSubscription(GetSubscriptionRequest) returns (Subscription);
+  rpc CancelSubscription(CancelSubscriptionRequest) returns (CancelSubscriptionResponse);
+  rpc GetPlans(GetPlansRequest) returns (PlansResponse);
+}
+
+message CheckoutRequest {
+  string user_id = 1;
+  string plan_id = 2;
+}
+
+message CheckoutResponse {
+  bool success = 1;
+  string transaction_id = 2;
+  string new_subscription_type = 3;
+  string expires_at = 4;
+}
+
+message GetSubscriptionRequest {
+  string user_id = 1;
+}
+
+message Subscription {
+  string id = 1;
+  string user_id = 2;
+  string plan_id = 3;
+  string status = 4;
+  string started_at = 5;
+  string expires_at = 6;
+}
+
+message CancelSubscriptionRequest {
+  string user_id = 1;
+  string subscription_id = 2;
+}
+
+message CancelSubscriptionResponse {
+  bool success = 1;
+}
+
+message GetPlansRequest {}
+
+message PlansResponse {
+  repeated SubscriptionPlan plans = 1;
+}
+
+message SubscriptionPlan {
+  string id = 1;
+  string name = 2;
+  double price = 3;
+  string currency = 4;
+  repeated string features = 5;
+}

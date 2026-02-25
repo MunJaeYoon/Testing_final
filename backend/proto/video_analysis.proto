@@ -1,0 +1,64 @@
+syntax = "proto3";
+
+package video_analysis;
+
+option go_package = "github.com/pawfiler/backend/services/video-analysis/pb";
+
+service VideoAnalysisService {
+  rpc UploadVideo(stream UploadVideoRequest) returns (UploadVideoResponse);
+  rpc GetAnalysisStatus(GetAnalysisStatusRequest) returns (AnalysisStatus);
+  rpc GetAnalysisResult(GetAnalysisResultRequest) returns (DeepfakeReport);
+}
+
+message UploadVideoRequest {
+  oneof data {
+    VideoMetadata metadata = 1;
+    bytes chunk = 2;
+  }
+}
+
+message VideoMetadata {
+  string user_id = 1;
+  string filename = 2;
+  int64 file_size = 3;
+}
+
+message UploadVideoResponse {
+  string task_id = 1;
+  string message = 2;
+}
+
+message GetAnalysisStatusRequest {
+  string task_id = 1;
+}
+
+message AnalysisStatus {
+  string task_id = 1;
+  string stage = 2;
+  repeated LogEntry logs = 3;
+}
+
+message LogEntry {
+  string timestamp = 1;
+  string message = 2;
+  string type = 3;
+}
+
+message GetAnalysisResultRequest {
+  string task_id = 1;
+}
+
+message DeepfakeReport {
+  string task_id = 1;
+  string verdict = 2;
+  double confidence_score = 3;
+  repeated ManipulatedRegion manipulated_regions = 4;
+  int32 frame_samples_analyzed = 5;
+  string model_version = 6;
+  int32 processing_time_ms = 7;
+}
+
+message ManipulatedRegion {
+  string label = 1;
+  double confidence = 2;
+}
