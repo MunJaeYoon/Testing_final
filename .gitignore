@@ -31,3 +31,10 @@ go*.linux-amd64.tar.gz
 .env
 .env.*
 !.env.example
+
+# Binaries
+community-service
+community-service.exe
+main
+main.exe
+node_modules
